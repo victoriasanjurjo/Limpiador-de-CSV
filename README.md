@@ -69,7 +69,8 @@ Limpiador de CSV/
 │   └── package_msix.ps1
 ├── docs/                                    # Documentación técnica y decisiones de arquitectura
 │   └── ARQUITECTURA.md
-├── outputs/                                 # Paquete MSIX compilado y certificado público de firma
+├── outputs/                                 # Ejecutable portable (.exe), paquete MSIX y certificado público
+│   ├── LimpiadorDeCSV.exe
 │   ├── LimpiadorDeCSV_1.0.0.0_x64.msix
 │   └── VictoriaSanjurjo_LimpiadorDeCSV.cer
 ├── src/                                     # Frontend en HTML, CSS y JavaScript puro (Vanilla)

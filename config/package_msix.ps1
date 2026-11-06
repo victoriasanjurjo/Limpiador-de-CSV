@@ -36,6 +36,7 @@ New-Item -ItemType Directory -Force -Path $outputsDir | Out-Null
 
 # Copiar ejecutable y AppxManifest.xml
 Copy-Item $releaseExe (Join-Path $stagingDir "limpiador-de-csv.exe") -Force
+Copy-Item $releaseExe (Join-Path $outputsDir "LimpiadorDeCSV.exe") -Force
 Copy-Item $manifestPath (Join-Path $stagingDir "AppxManifest.xml") -Force
 
 # Copiar recursos visuales requeridos por AppxManifest.xml
