@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Limpiador de CSV — Victoria Sanjurjo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Barra superior editorial -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 36 36" width="32" height="32" fill="none">
+            <rect width="36" height="36" rx="9" fill="#0D9488"/>
+            <rect x="7" y="7" width="22" height="22" rx="3" fill="#FFFFFF"/>
+            <rect x="7" y="7" width="22" height="6" rx="2" fill="#CCFBF1"/>
+            <rect x="10" y="16" width="7" height="2.5" rx="1" fill="#94A3B8"/>
+            <rect x="19" y="16" width="7" height="2.5" rx="1" fill="#10B981"/>
+            <rect x="10" y="21" width="7" height="2.5" rx="1" fill="#94A3B8"/>
+            <rect x="19" y="21" width="7" height="2.5" rx="1" fill="#10B981"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Limpiador de CSV</h1>
+          <p class="brand-subtitle">Normalización, depuración y ordenamiento instantáneo · Desarrollado por <strong>Victoria Sanjurjo</strong></p>
+        </div>
+      </div>
+
+      <div class="topbar-badges">
+        <span class="badge badge-outline" title="Solo se permite cargar 1 archivo por vez para máximo rendimiento">Modo: 1 archivo por vez</span>
+        <button id="btnLoadDemo" type="button" class="btn btn-subtle" title="Cargar un CSV de ejemplo con datos desordenados y sucios">
+          Cargar CSV de prueba
+        </button>
+      </div>
+    </header>
+
+    <!-- Mensajes de alerta / estado -->
+    <div id="statusBanner" class="status-banner hidden" role="status" aria-live="polite"></div>
+
+    <!-- Zona Drag & Drop + Barra de Acción en un clic -->
+    <section class="workspace-controls">
+      <div
+        id="dropZone"
+        class="drop-zone"
+        tabindex="0"
+        role="button"
+        aria-label="Arrastrar y soltar un archivo CSV aquí o hacer clic para seleccionar"
+      >
+        <input id="fileInput" type="file" accept=".csv,text/csv" class="sr-only" />
+        <div class="drop-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+        </div>
+        <div class="drop-text">
+          <p class="drop-primary" id="dropPrimaryText">
+            Arrastrá y soltá tu archivo <code>.csv</code> aquí o <span class="link-highlight">hacé clic para elegirlo</span>
+          </p>
+          <p class="drop-secondary" id="dropSecondaryText">
+            Acepta únicamente 1 archivo por vez · Detecta automáticamente separadores (<code>,</code> <code>;</code> <code>\t</code>) y codificación UTF-8 / ANSI
+          </p>
+        </div>
+      </div>
+
+      <!-- Controles de acción y configuración -->
+      <div class="action-card">
+        <div class="control-row">
+          <div class="control-group">
+            <label for="sortColumnSelect">Ordenar filas por columna:</label>
+            <select id="sortColumnSelect" disabled>
+              <option value="0">1.ª columna (automático)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="nullModeSelect">Celdas vacías / NaN:</label>
+            <select id="nullModeSelect">
+              <option value="fill_default" selected>Rellenar con "N/D"</option>
+              <option value="drop_row">Eliminar fila incompleta</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="btnOneClickClean" type="button" class="btn btn-primary" disabled>
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            Limpiar con un solo clic
+          </button>
+
+          <button id="btnSaveCsv" type="button" class="btn btn-secondary" disabled>
+            Guardar CSV limpio…
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cinta de métricas de limpieza -->
+    <section id="statsBar" class="stats-bar hidden" aria-label="Resumen de limpieza aplicada">
+      <div class="stat-pill">
+        <span class="stat-label">Separador original</span>
+        <strong class="stat-value" id="statDelimiter">—</strong>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Codificación</span>
+        <strong class="stat-value" id="statEncoding">—</strong>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Filas (Original → Limpio)</span>
+        <strong class="stat-value" id="statRows">0 → 0</strong>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Vacías / Duplicadas eliminadas</span>
+        <strong class="stat-value" id="statRemoved">0 / 0</strong>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Celdas recortadas / Nulos tratados</span>
+        <strong class="stat-value" id="statCells">0 / 0</strong>
+      </div>
+    </section>
+
+    <!-- Visualización doble: 5 primeras filas desordenadas (izquierda) vs 5 primeras filas ordenadas (derecha) -->
+    <main class="dual-preview-grid">
+      <!-- Panel Izquierdo: Filas Desordenadas (Original) -->
+      <section class="preview-panel panel-raw" aria-labelledby="rawPanelHeading">
+        <div class="panel-header">
+          <div>
+            <span class="panel-tag tag-raw">ANTES DE LIMPIAR</span>
+            <h2 id="rawPanelHeading" class="panel-title">5 primeras filas desordenadas (Original)</h2>
+          </div>
+          <span class="panel-meta" id="rawPanelMeta">Sin archivo cargado</span>
+        </div>
+
+        <div
+          id="rawTableWrapper"
+          class="table-wrapper"
+          tabindex="0"
+          role="region"
+          aria-labelledby="rawTableCaption"
+        >
+          <table id="rawTable">
+            <caption id="rawTableCaption" class="sr-only">
+              Primeras 5 filas desordenadas del archivo CSV original sin procesar
+            </caption>
+            <thead id="rawThead">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="rawTbody">
+              <tr class="empty-state-row">
+                <th scope="row">—</th>
+                <td>Arrastrá un archivo CSV arriba para visualizar las primeras 5 filas desordenadas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Panel Derecho: Filas Ordenadas y Limpias -->
+      <section class="preview-panel panel-clean" aria-labelledby="cleanPanelHeading">
+        <div class="panel-header">
+          <div>
+            <span class="panel-tag tag-clean">DESPUÉS DE LIMPIAR</span>
+            <h2 id="cleanPanelHeading" class="panel-title">5 primeras filas ordenadas y limpias</h2>
+          </div>
+          <span class="panel-meta" id="cleanPanelMeta">Esperando limpieza</span>
+        </div>
+
+        <div
+          id="cleanTableWrapper"
+          class="table-wrapper"
+          tabindex="0"
+          role="region"
+          aria-labelledby="cleanTableCaption"
+        >
+          <table id="cleanTable">
+            <caption id="cleanTableCaption" class="sr-only">
+              Primeras 5 filas ordenadas y depuradas del archivo CSV limpio
+            </caption>
+            <thead id="cleanThead">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="cleanTbody">
+              <tr class="empty-state-row">
+                <th scope="row">—</th>
+                <td>Las 5 primeras filas ordenadas y normalizadas en <code>snake_case</code> aparecerán aquí.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Pie con las 5 reglas activas -->
+    <footer class="footer-bar">
+      <div class="rules-summary">
+        <strong>Reglas activas en 1 clic:</strong>
+        <span>1. Trim de espacios</span> ·
+        <span>2. Sin vacías ni duplicadas</span> ·
+        <span>3. Separador <code>,</code> y UTF-8</span> ·
+        <span>4. Tratamiento de nulos/NaN</span> ·
+        <span>5. Cabeceras <code>snake_case</code> sin tildes + Orden ascendente</span>
+      </div>
+      <div class="publisher-info">
+        Publisher ID: <code>CN=CF220D35-0C1C-408C-BCB2-E85AA65BC95B</code>
+      </div>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
+

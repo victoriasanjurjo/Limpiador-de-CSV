@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D9488"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <!-- Fondo redondeado moderno -->
+  <rect x="16" y="16" width="224" height="224" rx="48" fill="url(#bgGrad)"/>
+  
+  <!-- Documento / Tabla CSV -->
+  <rect x="52" y="48" width="152" height="160" rx="16" fill="#FFFFFF"/>
+  
+  <!-- Cabecera de tabla -->
+  <path d="M52 64 C52 55.163 59.163 48 68 48 L188 48 C196.837 48 204 55.163 204 64 L204 84 L52 84 Z" fill="#CCFBF1"/>
+  
+  <!-- Filas y celdas comparativas -->
+  <rect x="68" y="100" width="52" height="14" rx="4" fill="#CBD5E1"/>
+  <rect x="132" y="100" width="56" height="14" rx="4" fill="#10B981"/>
+  
+  <rect x="68" y="126" width="52" height="14" rx="4" fill="#CBD5E1"/>
+  <rect x="132" y="126" width="56" height="14" rx="4" fill="#10B981"/>
+  
+  <rect x="68" y="152" width="52" height="14" rx="4" fill="#CBD5E1"/>
+  <rect x="132" y="152" width="56" height="14" rx="4" fill="#10B981"/>
+  
+  <rect x="68" y="178" width="52" height="14" rx="4" fill="#CBD5E1"/>
+  <rect x="132" y="178" width="56" height="14" rx="4" fill="#10B981"/>
+
+  <!-- Insignia de destello/limpieza en un clic -->
+  <circle cx="192" cy="192" r="36" fill="url(#accentGrad)" stroke="#FFFFFF" stroke-width="6"/>
+  <path d="M192 170 L197 185 L212 190 L197 195 L192 210 L187 195 L172 190 L187 185 Z" fill="#FFFFFF"/>
+</svg>
+

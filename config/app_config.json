@@ -1,0 +1,18 @@
+{
+  "app_name": "Limpiador de CSV",
+  "developer": "Victoria Sanjurjo",
+  "publisher_id": "CN=CF220D35-0C1C-408C-BCB2-E85AA65BC95B",
+  "version": "1.0.0.0",
+  "cleaning_rules": {
+    "trim_whitespace": true,
+    "remove_empty_rows": true,
+    "remove_duplicate_rows": true,
+    "normalize_delimiters_to_comma": true,
+    "normalize_encoding_utf8": true,
+    "handle_null_cells": "fill_or_drop",
+    "standardize_headers_snake_case": true
+  },
+  "preview_rows": 5,
+  "single_file_mode": true
+}
+

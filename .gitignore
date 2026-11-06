@@ -1,0 +1,19 @@
+# Rust / Cargo / Tauri
+target/
+src-tauri/target/
+src-tauri/gen/
+**/*.rs.bk
+Cargo.lock
+
+# Node / Frontend
+node_modules/
+
+# Certificados privados de firma (.pfx)
+*.pfx
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+

@@ -1,0 +1,10 @@
+  ID Venta ; Nombre del Cliente ; Categoría Producto ; Monto Total ($) ; Fecha Operación 
+104 ;   Sofía  Martínez  ; Electrónica ; 1850.75 ; 2026-10-14
+ ; ; ; ; 
+101 ; Martín   Gómez ; Hogar y Deco ; 920.00 ; 2026-10-10
+101 ; Martín Gómez ; Hogar y Deco ; 920.00 ; 2026-10-10
+105 ; Valentina López ; Indumentaria ; NaN ; 2026-10-18
+102 ;   Lucas Fernández ; Electrónica ; 3400.50 ; 2026-10-11
+103 ; Camila   Ruiz ; Librería ; 410.25 ; 2026-10-12
+106 ; Mateo Díaz ; Deportes ; 1290.00 ; 2026-10-19
+
